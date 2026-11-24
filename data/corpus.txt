@@ -1,0 +1,96 @@
+The king ruled the kingdom from his castle, and the queen ruled beside him.
+The queen wore a golden crown and the king wore a silver crown.
+A prince and a princess lived in the royal castle with the king and queen.
+The prince wanted to become king, and the princess wanted to become queen.
+The royal family held a feast in the great hall of the castle.
+The king gave a speech to the people of the kingdom.
+The queen and the princess walked through the royal garden.
+Knights protected the castle and served the king and the queen.
+The prince rode a horse to visit the kingdom of another king.
+Every kingdom has a king, a queen, a castle and a crown.
+
+The cat sat on the mat and the dog slept on the rug.
+A dog likes to chase a cat, and a cat likes to chase a mouse.
+The puppy played with the kitten in the garden.
+My dog barks at night and my cat sleeps all day.
+The cat drank milk and the dog ate meat.
+A horse runs fast, a dog runs fast, and a rabbit runs very fast.
+The farmer has a horse, a cow, a dog, a cat and many chickens.
+The bird sang in the tree while the cat watched the bird.
+A small mouse ran away from the hungry cat.
+Dogs and cats are the most popular pets in the world.
+
+I ate bread with butter and cheese for breakfast.
+She made a soup with tomato, onion, garlic and carrot.
+We cooked rice and chicken for dinner, then ate an apple.
+The chef cooked pasta with tomato sauce and fresh cheese.
+For lunch he ate a sandwich with bread, cheese and tomato.
+An apple, a banana and an orange are sweet fruits.
+She baked a cake with sugar, flour, eggs and butter.
+Good food needs fresh bread, fresh fruit and fresh vegetables.
+The soup was hot, the bread was warm and the cake was sweet.
+We drank tea and coffee and ate cake after dinner.
+
+The computer runs a program that processes data.
+A neural network learns patterns from data during training.
+The model was trained on a large dataset of text.
+Machine learning models need data, a computer and a training algorithm.
+A language model predicts the next token in a sequence of tokens.
+The tokenizer splits text into tokens before the model reads it.
+Each token is mapped to an embedding vector inside the neural network.
+Training a neural network on a computer can take many hours.
+The programmer wrote code so the computer could learn from data.
+Large language models are trained on text from books and the internet.
+The model learns an embedding for every token in its vocabulary.
+A tokenizer builds a vocabulary of tokens from a corpus of text.
+
+The sun was shining and the sky was blue and clear.
+Dark clouds covered the sky and heavy rain began to fall.
+In winter the snow is cold, and in summer the sun is hot.
+The wind was strong and the rain was cold during the storm.
+After the rain a rainbow appeared in the blue sky.
+Spring brings warm weather, flowers and gentle rain.
+The weather today is sunny, but tomorrow it will rain.
+Snow fell all night, and in the morning the world was white.
+The storm brought thunder, lightning, wind and rain.
+On a hot summer day the sun dries the wet grass.
+
+She plays football every weekend with her team.
+The team scored a goal and won the football match.
+He likes tennis, but his brother prefers basketball.
+The players trained hard to win the final match.
+The football team and the basketball team both won today.
+A good player practices every day to win the game.
+The match ended when the team scored the winning goal.
+Fans cheered as the players ran onto the field.
+She won the tennis match in three sets.
+Every team wants to win the game and lift the trophy.
+
+The mother and the father took their son and daughter to the park.
+My brother and my sister visited our grandmother and grandfather.
+The father read a story to his son, and the mother sang to her daughter.
+Our family includes a mother, a father, a brother and a sister.
+The grandmother baked bread for her grandson and granddaughter.
+The son helped his father, and the daughter helped her mother.
+A family is a mother, a father and their children.
+My sister and my brother go to the same school.
+
+She counted one, two, three, four and five apples.
+There are seven days in a week and twelve months in a year.
+He woke up at six, ate at seven and left at eight.
+Ten plus ten is twenty, and twenty plus thirty is fifty.
+The meeting starts at nine and ends at eleven.
+One hundred people came, then two hundred, then one thousand.
+
+The red apple, the green leaf and the blue sky made a pretty picture.
+She painted the wall white, the door red and the window blue.
+His car is black, her car is white and my car is red.
+Yellow flowers and purple flowers grew in the green garden.
+The colors of the rainbow are red, orange, yellow, green, blue and purple.
+
+We travelled by train from London to Paris and then by plane to Tokyo.
+Paris is a city in France, and London is a city in England.
+The plane flew from New York to Tokyo over the ocean.
+Tourists visit Rome, Paris and London every summer.
+The train station was full of travellers going to the city.
+She travelled to many cities and countries by train and plane.

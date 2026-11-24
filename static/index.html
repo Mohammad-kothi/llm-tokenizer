@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tokenizer Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Tokenizer Lab</h1>
+      <p class="sub">A Byte-Pair-Encoding tokenizer built from scratch — build a vocabulary, tokenise text, explore token embeddings in 3D and teach it new words.</p>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <main class="grid">
+    <!-- 1. TOKENISER -->
+    <section class="card" id="tokenise">
+      <h2><span class="num">1</span>Tokeniser</h2>
+      <textarea id="input" rows="4" spellcheck="false">The king and the queen trained a neural network on a computer.</textarea>
+      <div class="row small">
+        <label><input type="checkbox" id="showIds"> show token ids</label>
+        <label><input type="checkbox" id="showSpaces" checked> show ▁ space marker</label>
+      </div>
+      <div class="metrics" id="metrics"></div>
+      <div class="chips" id="chips"></div>
+      <details>
+        <summary>Token ids &amp; decoded text</summary>
+        <div class="label">ids</div>
+        <code class="block" id="ids"></code>
+        <div class="label">decode(ids)</div>
+        <code class="block" id="decoded"></code>
+      </details>
+    </section>
+
+    <!-- 2. BUILD VOCABULARY -->
+    <section class="card" id="build">
+      <h2><span class="num">2</span>Build vocabulary</h2>
+      <p class="hint">Paste any text (a book chapter, articles, your notes). BPE starts from single characters and keeps merging the most frequent pair until the vocabulary reaches the size you choose.</p>
+      <textarea id="corpus" rows="8" spellcheck="false"></textarea>
+      <div class="row">
+        <label>Vocabulary size <input type="number" id="vocabSize" min="40" max="5000" step="10"></label>
+        <label>Min pair count <input type="number" id="minFreq" min="1" max="50"></label>
+        <label>Embedding dim <input type="number" id="dim" min="3" max="64"></label>
+        <label>Context window <input type="number" id="window" min="1" max="10"></label>
+        <label class="check"><input type="checkbox" id="lowercase"> lowercase</label>
+      </div>
+      <div class="row">
+        <button id="buildBtn" class="primary">Build vocabulary</button>
+        <label class="file">Load .txt <input type="file" id="fileInput" accept=".txt,text/plain"></label>
+        <a class="button" href="/api/export">Export tokenizer.json</a>
+      </div>
+      <div class="status" id="buildStatus"></div>
+    </section>
+
+    <!-- 3. EMBEDDINGS 3D -->
+    <section class="card wide" id="embed">
+      <div class="headrow">
+        <h2><span class="num">3</span>Embedding space in 3D</h2>
+        <div class="row small">
+          <label>Show
+            <select id="filter">
+              <option value="words">whole words (▁…)</option>
+              <option value="all">all tokens</option>
+              <option value="subword">subwords &amp; characters</option>
+              <option value="added">added words only</option>
+            </select>
+          </label>
+          <label><input type="checkbox" id="labels"> labels on all points</label>
+          <label><input type="checkbox" id="path" checked> draw path of input text</label>
+          <input type="search" id="find" placeholder="Find a token…" list="tokenList">
+          <datalist id="tokenList"></datalist>
+          <button id="retrainBtn">Retrain embeddings</button>
+        </div>
+      </div>
+      <div class="embedwrap">
+        <div id="plot"></div>
+        <aside id="side">
+          <div class="label">Selected token</div>
+          <div id="selected" class="muted">Click a point (or a token chip) to see its nearest neighbours.</div>
+          <ol id="neighbours"></ol>
+          <div class="legend-note">Each token's vector comes from which tokens it appears next to in the corpus (PPMI + SVD), squashed to 3 axes with PCA. Similar tokens land close together. Highlighted points are the tokens of your input text.<br><br>Drag to rotate · use the toolbar (top-right of the plot) to zoom or pan · click legend items to hide a group.</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 4. ADD NEW WORDS -->
+    <section class="card" id="add">
+      <h2><span class="num">4</span>Add new words</h2>
+      <p class="hint">Add a word or phrase (e.g. <em>transformer</em>, <em>new york</em>, <em>gpt-4</em>). It becomes one token. Give example sentences to learn its embedding from context; otherwise it starts at the average of its old pieces.</p>
+      <div class="row">
+        <input type="text" id="newWord" placeholder="new word or phrase">
+        <button id="addBtn" class="primary">Add to vocabulary</button>
+      </div>
+      <textarea id="examples" rows="3" placeholder="Optional example sentences, e.g. “A transformer is a neural network model that learns from data.”"></textarea>
+      <div class="status" id="addStatus"></div>
+      <div class="label">Added words</div>
+      <ul id="addedList" class="added"></ul>
+    </section>
+
+    <!-- VOCAB TABLE -->
+    <section class="card" id="vocab">
+      <div class="headrow">
+        <h2>Vocabulary</h2>
+        <div class="row small">
+          <input type="search" id="vocabSearch" placeholder="Search tokens…">
+          <select id="vocabSort">
+            <option value="id">sort by id</option>
+            <option value="freq">sort by frequency</option>
+            <option value="len">sort by length</option>
+          </select>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>id</th><th>token</th><th>type</th><th>freq</th></tr></thead>
+          <tbody id="vocabBody"></tbody>
+        </table>
+      </div>
+      <div class="muted small" id="vocabCount"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

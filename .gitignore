@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+
+# Saved tokenizer state (regenerated on first run of app.py)
+model/
+
+# Local editor / tool settings
+.claude/
+.DS_Store
