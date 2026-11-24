@@ -1,0 +1,7 @@
+# Vercel only needs the static site (index.html, static/, data/).
+# The Python files stay on GitHub but are not deployed, so Vercel serves a plain
+# static site and the page runs the tokenizer in the browser (static/engine.js).
+*.py
+__pycache__/
+model/
+.claude/

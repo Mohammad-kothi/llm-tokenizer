@@ -21,7 +21,9 @@ from embeddings import EmbeddingModel
 from tokenizer import SPACE, SPECIAL_TOKENS, BPETokenizer
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC = os.path.join(ROOT, "static")
+CONTENT_TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
+                 ".css": "text/css; charset=utf-8", ".txt": "text/plain; charset=utf-8",
+                 ".json": "application/json; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png"}
 MODEL_DIR = os.path.join(ROOT, "model")
 DEFAULT_CORPUS = os.path.join(ROOT, "data", "corpus.txt")
 
@@ -117,6 +119,13 @@ class State:
         self.save()
         result["coords"] = self.embeddings.coords(token)
         return result
+
+    def reset(self) -> dict:
+        """Forget added words and settings, rebuild from the sample corpus."""
+        self.tokenizer = BPETokenizer()
+        self.settings = dict(DEFAULT_SETTINGS)
+        with open(DEFAULT_CORPUS, encoding="utf-8") as f:
+            return self.build(f.read(), {})
 
     def remove_word(self, token: str) -> bool:
         ok = self.tokenizer.remove_word(token)
@@ -215,13 +224,16 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
                 return
-        files = {"/": "index.html", "/index.html": "index.html", "/app.js": "app.js", "/style.css": "style.css"}
-        name = files.get(url.path)
-        if not name:
+        # static files: the page itself plus anything in static/ and data/
+        rel = "index.html" if url.path in ("/", "/index.html") else url.path.lstrip("/")
+        full = os.path.normpath(os.path.join(ROOT, rel))
+        allowed = full == os.path.join(ROOT, "index.html") or any(
+            full.startswith(os.path.join(ROOT, d) + os.sep) for d in ("static", "data"))
+        ctype = CONTENT_TYPES.get(os.path.splitext(full)[1])
+        if not (allowed and ctype and os.path.isfile(full)):
             return self._send(404, b"Not found", "text/plain")
-        ctype = {"html": "text/html", "js": "text/javascript", "css": "text/css"}[name.rsplit(".", 1)[1]]
-        with open(os.path.join(STATIC, name), "rb") as f:
-            self._send(200, f.read(), ctype + "; charset=utf-8")
+        with open(full, "rb") as f:
+            self._send(200, f.read(), ctype)
 
     def do_POST(self):
         path = urlparse(self.path).path
@@ -237,6 +249,8 @@ class Handler(BaseHTTPRequestHandler):
                     return self._json(STATE.add_word(str(data.get("word", "")), str(data.get("examples", ""))))
                 if path == "/api/remove_word":
                     return self._json({"ok": STATE.remove_word(str(data.get("token", "")))})
+                if path == "/api/reset":
+                    return self._json({"ok": True, "build": STATE.reset()})
                 if path == "/api/retrain_embeddings":
                     return self._json({"ok": True, "build": STATE.retrain_embeddings()})
             self._json({"error": "unknown endpoint"}, 404)

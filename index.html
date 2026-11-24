@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tokenizer Lab</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="An LLM tokenizer built from scratch: BPE tokeniser, vocabulary builder, 3D embedding visualisation and adding new words.">
+  <link rel="stylesheet" href="static/style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
 </head>
 <body>
@@ -51,7 +52,8 @@
       <div class="row">
         <button id="buildBtn" class="primary">Build vocabulary</button>
         <label class="file">Load .txt <input type="file" id="fileInput" accept=".txt,text/plain"></label>
-        <a class="button" href="/api/export">Export tokenizer.json</a>
+        <a class="button" id="exportBtn" href="/api/export">Export tokenizer.json</a>
+        <button id="resetBtn" title="Forget added words and rebuild from the sample text">Reset to sample</button>
       </div>
       <div class="status" id="buildStatus"></div>
     </section>
@@ -124,6 +126,12 @@
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <footer class="foot">
+    <span id="modeNote"></span>
+    <a href="https://github.com/Mohammad-kothi/llm-tokenizer" target="_blank" rel="noopener">Source code on GitHub</a>
+  </footer>
+
+  <script src="static/engine.js"></script>
+  <script src="static/app.js"></script>
 </body>
 </html>

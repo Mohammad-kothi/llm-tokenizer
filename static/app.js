@@ -14,7 +14,21 @@ let pointByToken = new Map();
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const pretty = (t) => t.replaceAll("\n", "↵");
 
+// Two ways to run: with `python3 app.py` (Python does the work), or as a static
+// site such as Vercel, where engine.js does the same work inside the browser.
+let local = null; // TokenizerEngine.LocalBackend when there is no Python server
+
+async function detectBackend() {
+  try {
+    const res = await fetch("/api/state", { cache: "no-store" });
+    if (res.ok && (res.headers.get("content-type") || "").includes("json")) return;
+  } catch (e) { /* no server */ }
+  local = new TokenizerEngine.LocalBackend("data/corpus.txt");
+  await local.init();
+}
+
 async function api(path, body) {
+  if (local) return local.handle(path, body);
   const res = await fetch(path, body === undefined ? {} : {
     method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
   });
@@ -121,6 +135,32 @@ $("buildBtn").addEventListener("click", async () => {
     setStatus($("buildStatus"),
       `✓ ${build.unique_words} unique words · ${build.alphabet} base characters · ${build.merges} merges → <b>${build.vocab_size}</b> tokens. ` +
       `${build.tokens_with_embeddings} tokens embedded in ${build.dim} dims.${note}`, "ok");
+  } catch (err) {
+    setStatus($("buildStatus"), "✗ " + esc(err.message), "err");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+$("exportBtn").addEventListener("click", async (e) => {
+  if (!local) return; // the Python server sends the file itself
+  e.preventDefault();
+  const blob = new Blob([JSON.stringify(local.tokenizer.toDict(), null, 1)], { type: "application/json" });
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "tokenizer.json" });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+$("resetBtn").addEventListener("click", async () => {
+  if (!confirm("Forget your added words and rebuild the vocabulary from the sample text?")) return;
+  const btn = $("resetBtn");
+  btn.disabled = true;
+  try {
+    await api("/api/reset", {});
+    selected = null;
+    await Promise.all([refresh(), loadCorpus()]);
+    setStatus($("buildStatus"), "✓ Reset to the sample text.", "ok");
+    setStatus($("addStatus"), "");
   } catch (err) {
     setStatus($("buildStatus"), "✗ " + esc(err.message), "err");
   } finally {
@@ -366,9 +406,13 @@ $("showSpaces").addEventListener("change", renderChips);
 
 (async () => {
   try {
+    await detectBackend();
+    $("modeNote").textContent = local
+      ? "Running entirely in your browser: the tokenizer and embeddings are computed in JavaScript (static/engine.js). Your changes are saved in this browser only."
+      : "Running with the Python backend (app.py). Changes are saved in the model/ folder.";
     await Promise.all([refresh(), loadCorpus()]);
     attachPlotEvents();
   } catch (err) {
-    document.body.insertAdjacentHTML("afterbegin", `<p style="color:#ff7a7a;padding:16px">Could not reach the server: ${esc(err.message)}. Is <code>python3 app.py</code> running?</p>`);
+    document.body.insertAdjacentHTML("afterbegin", `<p style="color:#ff7a7a;padding:16px">Could not start the app: ${esc(err.message)}</p>`);
   }
 })();

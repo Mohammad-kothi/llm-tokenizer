@@ -3,7 +3,22 @@
 A Byte-Pair-Encoding (BPE) tokenizer (the kind GPT and LLaMA use) written in plain Python, with a web app around it.
 It needs **no installs**: only the Python standard library. The 3D plot loads Plotly from a CDN, so you need internet access.
 
-## Run it
+The web page runs in two ways:
+
+- **With Python** (`python3 app.py`): the Python code does the work, and your vocabulary is saved in `model/`.
+- **As a static website** (for example on Vercel): there is no Python server, so the page runs a JavaScript copy of the same tokenizer (`static/engine.js`) inside the visitor's browser. It produces exactly the same vocabulary and tokens as the Python version. Each visitor's changes are saved in their own browser.
+
+The page picks the right mode automatically.
+
+## Deploy on Vercel
+
+1. Push this repository to GitHub.
+2. Go to <https://vercel.com/new> and import the `llm-tokenizer` repository.
+3. Leave every setting as it is (Framework Preset: **Other**, no build command) and click **Deploy**.
+
+Vercel serves `index.html` from the project root. The `.vercelignore` file leaves out the Python files, so Vercel deploys a plain static site. Every later `git push` redeploys automatically.
+
+## Run it locally
 
 ```bash
 python3 app.py
@@ -49,9 +64,13 @@ tok = BPETokenizer.load("my_tokenizer.json")
 ## Files
 
 ```
-app.py            web server + JSON API (standard library http.server)
-tokenizer.py      BPE tokenizer: train / encode / decode / add_word / save / load
-embeddings.py     co-occurrence → PPMI → SVD embeddings → PCA to 3D, nearest neighbours
-data/corpus.txt   sample corpus (royalty, animals, food, tech, weather, sports…)
-static/           the web page (HTML, CSS, JS with Plotly for 3D)
+index.html         the web page (works with app.py or as a static site)
+static/app.js      page logic and the 3D plot (Plotly)
+static/engine.js   JavaScript port of tokenizer.py + embeddings.py (used when there is no Python server)
+static/style.css   styles
+app.py             Python web server + JSON API (standard library http.server)
+tokenizer.py       BPE tokenizer: train / encode / decode / add_word / save / load
+embeddings.py      co-occurrence → PPMI → SVD embeddings → PCA to 3D, nearest neighbours
+data/corpus.txt    sample corpus (royalty, animals, food, tech, weather, sports…)
+.vercelignore      keeps the Python files out of the Vercel deployment
 ```
